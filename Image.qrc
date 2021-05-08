@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/Images">
+    	<file alias="HomeSideIMG.jpg">Resource/HomeSideIMG.jpg</file>
+    	<file alias="noImage.png">Resource/noImage.png</file>
+    </qresource>
+</RCC>
