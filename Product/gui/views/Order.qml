@@ -2,10 +2,21 @@ import QtQuick 2.9
 import QtQuick.Controls 1.0
 import "../Styling"
 import "../components"
+
+import com.OrderModel 1.0
+
 Item {
     width: Styling._DISPLAY_WIDTH
     height: Styling._DISPLAY_HEIGHT
     signal requestChangePage(var identify)
+
+    OrderModel {
+        id: a
+    }
+    Component.onCompleted: {
+        console.log(a.listItem[1].image)
+    }
+
     //background
     Rectangle {
         anchors.fill: parent
