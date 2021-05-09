@@ -23,8 +23,22 @@ Q_OBJECT
 
 public:
     explicit OrderModel(QObject *parent = nullptr);
+
+    //!
+    //! \brief getListItem
+    //! \return list of all item
+    //!
     QVariantList getListItem() const;
+
+    //!
+    //! \brief getMenuListFromDB
+    //!
+    void getMenuListFromDB();
 private:
+
+    //!
+    //! \brief m_listItem
+    //!
     QVector<Item> m_listItem;
 };
 

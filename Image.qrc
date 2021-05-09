@@ -3,5 +3,8 @@
     <qresource prefix="/Images">
     	<file alias="HomeSideIMG.jpg">Resource/HomeSideIMG.jpg</file>
     	<file alias="noImage.png">Resource/noImage.png</file>
+    	<file alias="burger.png">Resource/burger.png</file>
+    	<file alias="french-fries.png">Resource/french-fries.png</file>
+    	<file alias="green-salad.png">Resource/green-salad.png</file>
     </qresource>
 </RCC>

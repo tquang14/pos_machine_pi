@@ -14,7 +14,10 @@ Item {
         id: a
     }
     Component.onCompleted: {
-        console.log(a.listItem[1].image)
+        for (var i in a.listItem) {
+            var p = a.listItem[i];
+            console.log("image path: " + p.image + " name: " + p.name + " price: " + p.price)
+        }
     }
 
     //background
@@ -141,15 +144,16 @@ Item {
             //TODO: remove when add backend
             ListModel {
                 id: foodModel
-                ListElement {
-                    name: "Gourment Burger"
-                    imgPath: ""
-                }
             }
             Component.onCompleted: {
-                for(var i = 0; i < 30; i++) {
-                    foodModel.append({name: "Gourment Burger " + i, imgPath: ""})
+                for (var i in a.listItem) {
+                    var p = a.listItem[i];
+//                    console.log("image path: " + p.image + " name: " + p.name + " price: " + p.price)
+                    foodModel.append({name: p.name, imageP: "qrc:/Images/" + p.image, price: p.price})
                 }
+//                for(var i = 0; i < 30; i++) {
+//                    foodModel.append({name: "Gourment Burger " + i, imgPath: ""})
+//                }
                 menu.model = foodModel
             }
 
@@ -167,11 +171,11 @@ Item {
                 delegate: Card {
                     textContent: name
                     textContentSize: Styling._SIZE_F2
-                    imgPath: imgPath
+                    imgPath: imageP
                     cardWidth: menu.width
                     cardHeight: 70
                     cardColor: Styling._COLOR_WHITE
-                    subTextContent: "45.000 VNĐ"
+                    subTextContent: price + " VND"
                     subTextContentSize: Styling._SIZE_F2
                 }
             }

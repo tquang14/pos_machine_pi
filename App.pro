@@ -17,6 +17,7 @@ SOURCES += \
 
 HEADERS += \
         $${INCLUDE_PATH}/backend.hpp \
+        $${INCLUDE_PATH}/ProjectConst.hpp \
         $${INCLUDE_PATH}/OrderModel.hpp
 
 RESOURCES += qml.qrc \
