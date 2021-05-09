@@ -1,7 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QSqlDatabase>
-
+#include <QDebug>
+#include <QSqlQuery>
+#include <QSqlRecord>
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -18,6 +20,18 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("../db/datn.db");
+    bool ok = db.open();
+    qDebug() << "test database ok: " << ok;
+    QSqlQuery query;
+    QString queryString = "SELECT * FROM test";
 
+    query.exec(queryString);
+
+    while (query.next()) {
+        QSqlRecord record = query.record();
+        qDebug() << "Date : " << record.value(0).toString();
+    }
     return app.exec();
 }
