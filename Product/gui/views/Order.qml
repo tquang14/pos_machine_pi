@@ -11,15 +11,8 @@ Item {
     signal requestChangePage(var identify)
 
     OrderModel {
-        id: a
+        id: orderModel
     }
-    Component.onCompleted: {
-        for (var i in a.listItem) {
-            var p = a.listItem[i];
-            console.log("image path: " + p.image + " name: " + p.name + " price: " + p.price)
-        }
-    }
-
     //background
     Rectangle {
         anchors.fill: parent
@@ -64,17 +57,13 @@ Item {
             //TODO: remove when add backend
             ListModel {
                 id: billModel
-                ListElement {
-                    name: "Gourment Burger"
-                    imgPath: ""
-                }
             }
-            Component.onCompleted: {
-                for(var i = 0; i < 30; i++) {
-                    billModel.append({name: "Gourment Burger " + i, imgPath: ""})
-                }
-                orderList.model = billModel
-            }
+//            Component.onCompleted: {
+//                for(var i = 0; i < 30; i++) {
+//                    billModel.append({name: "Gourment Burger " + i, imgPath: ""})
+//                }
+//                orderList.model = billModel
+//            }
 
             ListView {
                 id: orderList
@@ -90,9 +79,10 @@ Item {
                 delegate: Card {
                     id: listItem
                     textContent: name
-                    imgPath: imgPath
+                    imgPath: imageP
                     cardWidth: orderList.width
                     cardHeight: 36
+                    subTextContent: "x" + numOfItem
                 }
             }
             // total money
@@ -140,27 +130,21 @@ Item {
                 anchors.leftMargin: 20
             }
             //list of food
-            // dummy model, shoule be read from backend
-            //TODO: remove when add backend
             ListModel {
                 id: foodModel
             }
             Component.onCompleted: {
-                for (var i in a.listItem) {
-                    var p = a.listItem[i];
-//                    console.log("image path: " + p.image + " name: " + p.name + " price: " + p.price)
+                for (var i in orderModel.listItem) {
+                    var p = orderModel.listItem[i];
                     foodModel.append({name: p.name, imageP: "qrc:/Images/" + p.image, price: p.price})
                 }
-//                for(var i = 0; i < 30; i++) {
-//                    foodModel.append({name: "Gourment Burger " + i, imgPath: ""})
-//                }
                 menu.model = foodModel
             }
 
             ListView {
                 id: menu
                 width: parent.width
-                height: parent.height
+                height: parent.height - title.height
                 clip: true
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 10
@@ -177,6 +161,18 @@ Item {
                     cardColor: Styling._COLOR_WHITE
                     subTextContent: price + " VND"
                     subTextContentSize: Styling._SIZE_F2
+                    onCardClicked: {
+                        var contentThisItem = false
+                        for (var i = 0; i < billModel.rowCount(); i++) {
+                            if (billModel.get(i).name === name) {
+                                billModel.get(i).numOfItem += 1
+                                contentThisItem = true
+                            }
+                        }
+                        if (!contentThisItem)
+                            billModel.append({name: name, imageP: imageP, price: price, numOfItem: 1})
+//                        console.log(billModel.match())
+                    }
                 }
             }
         }

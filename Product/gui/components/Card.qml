@@ -4,7 +4,7 @@ import "../Styling"
 
 Item {
     id: root
-    signal cardClicked(var identify)
+    signal cardClicked(var idx)
     property string textContent: ""
     property string textContentSize: Styling._SIZE_F3
     property string textContentColor: Styling._COLOR_BLACK
@@ -64,7 +64,7 @@ Item {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            console.log("aaaaaaaaaa")
+            cardClicked(index)
         }
     }
 }
