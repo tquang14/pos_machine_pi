@@ -39,3 +39,9 @@ void OrderModel::getMenuListFromDB() {
         delete query;
     }
 }
+
+void OrderModel::order(QVariantList nameItem)
+{
+    QList <QVariant> p = nameItem[0].toList();
+    qDebug() << "aaaaaaaaaa " << p[0].toString();
+}

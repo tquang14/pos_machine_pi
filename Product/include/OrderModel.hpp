@@ -34,6 +34,15 @@ public:
     //! \brief getMenuListFromDB
     //!
     void getMenuListFromDB();
+
+public slots:
+    //!
+    //! \brief order
+    //! \param orderList
+    //!
+
+    void order(QVariantList nameItem);
+
 private:
 
     //!

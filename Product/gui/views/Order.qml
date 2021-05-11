@@ -1,14 +1,30 @@
 import QtQuick 2.9
 import QtQuick.Controls 1.0
+
 import "../Styling"
 import "../components"
-
 import com.OrderModel 1.0
 
 Item {
     width: Styling._DISPLAY_WIDTH
     height: Styling._DISPLAY_HEIGHT
     signal requestChangePage(var identify)
+
+    function addSeparatorsNF(nStr, /*inD,*/ outD, sep)
+    {
+        nStr += '';
+//        var dpos = nStr.indexOf(inD);
+        var nStrEnd = '';
+//        if (dpos !== -1) {
+//            nStrEnd = outD + nStr.substring(dpos + 1, nStr.length);
+//            nStr = nStr.substring(0, dpos);
+//        }
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(nStr)) {
+            nStr = nStr.replace(rgx, '$1' + sep + '$2');
+        }
+        return nStr + nStrEnd;
+    }
 
     OrderModel {
         id: orderModel
@@ -52,18 +68,9 @@ Item {
                 color: "blue"
                 opacity: 0.5
             }
-            //list of order food
-            // dummy model, shoule be read from backend
-            //TODO: remove when add backend
             ListModel {
                 id: billModel
             }
-//            Component.onCompleted: {
-//                for(var i = 0; i < 30; i++) {
-//                    billModel.append({name: "Gourment Burger " + i, imgPath: ""})
-//                }
-//                orderList.model = billModel
-//            }
 
             ListView {
                 id: orderList
@@ -102,11 +109,27 @@ Item {
                 }
                 Text {
                     id: totalMoney
-                    text: "100.000" + " VNĐ"
+                    property int total: 0
+                    text: addSeparatorsNF(total, ",", " ") + "-VNĐ"
                     color: Styling._COLOR_RED
                     font.pixelSize: Styling._SIZE_F1
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: headline.bottom
+                }
+                // OK Button
+                MyButton {
+                    id: applyBtn
+                    anchors.top: totalMoney.bottom
+                    anchors.topMargin: 6
+                    anchors.right: parent.right
+                    btnColor: Styling._COLOR_ORANGE
+                    textContent: "APPLY"
+                    btnWidth: 70
+                    onBtnClicked: {
+                        orderModel.order([['aaaa', 'aaaa1'],
+                                          ['bbbb', 'bbbb1'],
+                                          ['cccc', 'cccc1']])
+                    }
                 }
             }
         }
@@ -159,7 +182,7 @@ Item {
                     cardWidth: menu.width
                     cardHeight: 70
                     cardColor: Styling._COLOR_WHITE
-                    subTextContent: price + " VND"
+                    subTextContent: addSeparatorsNF(price, ",", " ") + "-VND"
                     subTextContentSize: Styling._SIZE_F2
                     onCardClicked: {
                         var contentThisItem = false
@@ -171,7 +194,8 @@ Item {
                         }
                         if (!contentThisItem)
                             billModel.append({name: name, imageP: imageP, price: price, numOfItem: 1})
-//                        console.log(billModel.match())
+
+                        totalMoney.total = parseInt(totalMoney.total) + parseInt(price)
                     }
                 }
             }
