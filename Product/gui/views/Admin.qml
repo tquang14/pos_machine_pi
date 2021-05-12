@@ -76,8 +76,8 @@ Item {
                     anchors.topMargin: 15
                     headerModel: [ // widths must add to 1
                         {text: "STT"        ,   width: 0.1},
+                        {text: "ID"         ,   width: 0.15},
                         {text: "Món"        ,   width: 0.35},
-                        {text: "Số lượng"   ,   width: 0.15},
                         {text: "Thời gian"  ,   width: 0.2},
                         {text: "Thành tiền" ,   width: 0.2},
                     ]
@@ -95,7 +95,7 @@ Item {
                         ["10 ", " ", " ", " ", " "],
                         ["11 ", " ", " ", " ", " "],
                         ["12 ", " ", " ", " ", " "],
-                        ["13 ", " ", " ", " ", " "],
+                        ["13 ", " ", " ", " ", " "]
                     ]
                 }
                 //total income

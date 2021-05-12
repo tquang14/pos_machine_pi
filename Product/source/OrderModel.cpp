@@ -1,17 +1,27 @@
+#include <QDebug>
+
 #include "../include/OrderModel.hpp"
 #include "../include/ProjectConst.hpp"
-
-#include <QDebug>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlRecord>
 
 OrderModel::OrderModel(QObject *parent)
             : QObject (parent)
 {
-//    m_listItem << Item{"a", "b", "c"}
-//               << Item{"a1", "b1", "c1"};
+    initDB();
+
     getMenuListFromDB();
+}
+
+OrderModel::~OrderModel() {
+    delete m_query;
+}
+
+void OrderModel::initDB() {
+    m_db = new QSqlDatabase();
+    *m_db = QSqlDatabase::addDatabase(DB_TYPE);
+    m_db->setDatabaseName(DB_NAME);
+    m_dbStatus = m_db->open();
+    qDebug() << "db status: " << m_dbStatus;
+    m_query = new QSqlQuery();
 }
 
 QVariantList OrderModel::getListItem() const {
@@ -23,25 +33,29 @@ QVariantList OrderModel::getListItem() const {
 }
 
 void OrderModel::getMenuListFromDB() {
-    QSqlDatabase db = QSqlDatabase::addDatabase(DB_TYPE);
-    db.setDatabaseName(DB_NAME);
-    bool ok = db.open();
-    qDebug() << "connect to database at func: " << __FUNCTION__ << " : " << ok;
-    if (ok) {
+    if (m_dbStatus) {
         const QString queryStr = "SELECT * FROM menu";
-        QSqlQuery *query = new QSqlQuery();
-        query->exec(queryStr);
-
-        while(query->next()) {
-            QSqlRecord record = query->record();
+        m_query->exec(queryStr);
+        while(m_query->next()) {
+            QSqlRecord record = m_query->record();
             m_listItem << Item{record.value(0).toString(), record.value(1).toString(), record.value(2).toString()};
         }
-        delete query;
     }
 }
 
-void OrderModel::order(QVariantList nameItem)
+bool OrderModel::order(QVariantList nameItem, int totalMoney)
 {
-    QList <QVariant> p = nameItem[0].toList();
-    qDebug() << "aaaaaaaaaa " << p[0].toString();
+    QString receiptContent = "";
+    for (auto p : nameItem) {
+        QList <QVariant> list = p.toList();
+        receiptContent += list[0].toString() + " x" + list[1].toString() + ", ";
+    }
+    // remove the last ", " because in the loop we add it
+    receiptContent = receiptContent.left(receiptContent.lastIndexOf(", "));
+
+    const QString queryStr = "INSERT INTO receipt (id, dishes, totalMoney) VALUES(NULL, '"
+                           + receiptContent + "'," + "'" + QString::number(totalMoney) + "')";
+    if (m_dbStatus)
+        return m_query->exec(queryStr);
+    return false;
 }

@@ -5,6 +5,10 @@
 #include <QString>
 #include <QVector>
 #include <QVariant>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlRecord>
+
 struct Item {
 Q_GADGET
     Q_PROPERTY(QString image MEMBER m_image)
@@ -22,7 +26,28 @@ Q_OBJECT
     Q_PROPERTY(QVariantList listItem READ getListItem)
 
 public:
+    //!
+    //! \brief constructor
+    //! \param parent
+    //!
     explicit OrderModel(QObject *parent = nullptr);
+
+    //!
+    //! \brief destructor
+    //!
+    ~OrderModel();
+
+public slots:
+    //!
+    //! \brief order
+    //! \param orderList
+    //!
+
+    bool order(QVariantList nameItem, int totalMoney);
+
+private:
+
+    void initDB();
 
     //!
     //! \brief getListItem
@@ -35,20 +60,25 @@ public:
     //!
     void getMenuListFromDB();
 
-public slots:
-    //!
-    //! \brief order
-    //! \param orderList
-    //!
-
-    void order(QVariantList nameItem);
-
-private:
-
     //!
     //! \brief m_listItem
     //!
     QVector<Item> m_listItem;
+
+    //!
+    //! \brief m_db
+    //!
+    QSqlDatabase *m_db;
+
+    //!
+    //! \brief m_dbStatus
+    //!
+    bool m_dbStatus;
+
+    //!
+    //! \brief m_query
+    //!
+    QSqlQuery *m_query;
 };
 
 #endif

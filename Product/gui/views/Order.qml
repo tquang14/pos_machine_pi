@@ -9,21 +9,45 @@ Item {
     width: Styling._DISPLAY_WIDTH
     height: Styling._DISPLAY_HEIGHT
     signal requestChangePage(var identify)
-
-    function addSeparatorsNF(nStr, /*inD,*/ outD, sep)
+    //func to add thoundsand separator
+    function addSeparatorsNF(nStr, outD, sep)
     {
-        nStr += '';
-//        var dpos = nStr.indexOf(inD);
-        var nStrEnd = '';
-//        if (dpos !== -1) {
-//            nStrEnd = outD + nStr.substring(dpos + 1, nStr.length);
-//            nStr = nStr.substring(0, dpos);
-//        }
-        var rgx = /(\d+)(\d{3})/;
+        nStr += ''
+        var nStrEnd = ''
+        var rgx = /(\d+)(\d{3})/
         while (rgx.test(nStr)) {
-            nStr = nStr.replace(rgx, '$1' + sep + '$2');
+            nStr = nStr.replace(rgx, '$1' + sep + '$2')
         }
-        return nStr + nStrEnd;
+        return nStr + nStrEnd
+    }
+    //func to get all order item, number of item
+    function getReceipt() {
+        var itemList = []
+        for (var i = 0; i < billModel.rowCount(); i++) {
+            itemList.push([billModel.get(i).name, billModel.get(i).numOfItem])
+        }
+        return itemList
+    }
+    Loader {
+        id: notification
+        width: 200
+        height: 100
+        anchors.centerIn: parent
+        visible: false
+        z: 100
+        Item {
+            id: container
+            anchors.fill: parent
+
+            Rectangle {
+                anchors.fill: parent
+                color: Styling._COLOR_ORANGE
+            }
+            Text {
+                id: status
+                text: "aaaaaa"
+            }
+        }
     }
 
     OrderModel {
@@ -126,9 +150,10 @@ Item {
                     textContent: "APPLY"
                     btnWidth: 70
                     onBtnClicked: {
-                        orderModel.order([['aaaa', 'aaaa1'],
-                                          ['bbbb', 'bbbb1'],
-                                          ['cccc', 'cccc1']])
+//                        orderModel.order(getReceipt(), totalMoney.total)
+                        notification.visible = true
+                        billModel.clear()
+                        totalMoney.total = 0
                     }
                 }
             }
