@@ -46,7 +46,9 @@ public slots:
     bool order(QVariantList nameItem, int totalMoney);
 
 private:
-
+    //!
+    //! \brief initDB
+    //!
     void initDB();
 
     //!

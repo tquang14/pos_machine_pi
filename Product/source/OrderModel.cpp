@@ -13,6 +13,7 @@ OrderModel::OrderModel(QObject *parent)
 
 OrderModel::~OrderModel() {
     delete m_query;
+    delete m_db;
 }
 
 void OrderModel::initDB() {

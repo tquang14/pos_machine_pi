@@ -13,11 +13,13 @@ INCLUDE_PATH = Product/include
 SOURCES += \
         main.cpp \
         $${SOURCES_PATH}/backend.cpp \
+        $${SOURCES_PATH}/AdminModel.cpp \
         $${SOURCES_PATH}/OrderModel.cpp
 
 HEADERS += \
         $${INCLUDE_PATH}/backend.hpp \
         $${INCLUDE_PATH}/ProjectConst.hpp \
+        $${INCLUDE_PATH}/AdminModel.hpp \
         $${INCLUDE_PATH}/OrderModel.hpp
 
 RESOURCES += qml.qrc \

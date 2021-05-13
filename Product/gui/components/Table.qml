@@ -1,5 +1,5 @@
 import QtQuick 2.0
-
+import QtQuick.Controls 2.2
 Item { // size controlled by width
     id: root
     property color bgColor: "#ffffff"
@@ -76,15 +76,14 @@ Item { // size controlled by width
 
             property int     row:     index     // outer index
             property variant rowData: modelData // much faster than listView.model[row]
-
             Row {
                 anchors.fill: parent
-
                 Repeater { // index is column
                     model: rowData // headerModel.length
 
                     delegate: Item { // cell
-                        width: headerModel[index].width * root.width;  height: header.height
+                        width: headerModel[index].width * root.width
+                        height: header.height
 
                         Rectangle {
                             anchors.fill: parent
@@ -92,10 +91,23 @@ Item { // size controlled by width
                             border.color: "black"
                         }
                         Text {
-//                            x: 0.03 * root.width
+                            width: parent.width
+                            height: parent.height
                             text: modelData
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: 0.03 * root.width
+                            wrapMode: Text.WordWrap
+                            clip: true
+                            Component.onCompleted: {
+                                // maximum height of a row is 25 char so 2 row is 50
+                                // so just need to display 50 char then append ...
+                                if (lineCount > 2) {
+                                    var str = modelData.substring(0, 50)
+                                    str += "..."
+                                    text = str
+                                    console.log(str)
+                                }
+                            }
                         }
                     }
                 }

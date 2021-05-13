@@ -28,9 +28,11 @@ Item {
         }
         return itemList
     }
+    // notification to inform when the order success
+    // TODO: add warning when order is null
     Loader {
         id: notification
-        width: 200
+        width: 300
         height: 100
         anchors.centerIn: parent
         visible: false
@@ -42,12 +44,23 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 color: Styling._COLOR_ORANGE
+                radius: 30
             }
             Text {
                 id: status
-                text: "aaaaaa"
+                text: "Order success"
+                font.pixelSize: Styling._SIZE_F4
+                anchors.centerIn: parent
             }
         }
+    }
+    // timer to hide notification after 3s display
+    Timer {
+        id: hideNotiTimer
+        interval: 2000
+        running: false
+        repeat: false
+        onTriggered: notification.visible = false
     }
 
     OrderModel {
@@ -150,10 +163,12 @@ Item {
                     textContent: "APPLY"
                     btnWidth: 70
                     onBtnClicked: {
-//                        orderModel.order(getReceipt(), totalMoney.total)
-                        notification.visible = true
                         billModel.clear()
                         totalMoney.total = 0
+                        if (orderModel.order(getReceipt(), totalMoney.total)) {
+                            notification.visible = true
+                            hideNotiTimer.start()
+                        }
                     }
                 }
             }

@@ -1,12 +1,28 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.0
+import com.AdminModel 1.0
 //import Qt.labs.qmlmodels 1.0
 import "../Styling"
 import "../components"
 Item {
     width: Styling._DISPLAY_WIDTH
     height: Styling._DISPLAY_HEIGHT
+
+
     signal requestChangePage(var identify)
+    AdminModel {
+        id: adminModel
+    }
+    Component.onCompleted: {
+        var listReceipt  = []
+
+        for (var i in adminModel.listReceipt) {
+            var p = adminModel.listReceipt[i]
+            listReceipt.push([i, p.ID, p.content, p.price, p.dateTime])
+        }
+        tableIncome.dataModel = listReceipt
+    }
+
     //background
     Rectangle {
         anchors.fill: parent
@@ -82,21 +98,7 @@ Item {
                         {text: "Thành tiền" ,   width: 0.2},
                     ]
 
-                    dataModel: [ // TODO: remove dummy data use cpp
-                        ["1 ", " ", " ", " ", " "],
-                        ["2 ", " ", " ", " ", " "],
-                        ["3 ", " ", " ", " ", " "],
-                        ["4 ", " ", " ", " ", " "],
-                        ["5 ", " ", " ", " ", " "],
-                        ["6 ", " ", " ", " ", " "],
-                        ["7 ", " ", " ", " ", " "],
-                        ["8 ", " ", " ", " ", " "],
-                        ["9 ", " ", " ", " ", " "],
-                        ["10 ", " ", " ", " ", " "],
-                        ["11 ", " ", " ", " ", " "],
-                        ["12 ", " ", " ", " ", " "],
-                        ["13 ", " ", " ", " ", " "]
-                    ]
+                    dataModel: []
                 }
                 //total income
                 Item {
