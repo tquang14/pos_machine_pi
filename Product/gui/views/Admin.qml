@@ -43,6 +43,26 @@ Item {
             anchors.centerIn: parent
             font.pixelSize: Styling._SIZE_F4
         }
+        Item {
+            id: backBtn
+            width: 30
+            height: 30
+            Text {
+                text: "<<"
+                font.pixelSize: Styling._SIZE_F3
+                anchors.centerIn: parent
+            }
+            Rectangle {
+                anchors.fill: parent
+                color: Styling._COLOR_ORANGE
+                z: -1
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: requestChangePage("admin");
+            }
+        }
     }
     //main view
     TabBar {

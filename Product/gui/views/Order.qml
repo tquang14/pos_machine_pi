@@ -163,12 +163,12 @@ Item {
                     textContent: "APPLY"
                     btnWidth: 70
                     onBtnClicked: {
-                        billModel.clear()
-                        totalMoney.total = 0
                         if (orderModel.order(getReceipt(), totalMoney.total)) {
                             notification.visible = true
                             hideNotiTimer.start()
                         }
+                        billModel.clear()
+                        totalMoney.total = 0
                     }
                 }
             }
@@ -184,12 +184,34 @@ Item {
             anchors.leftMargin: 40
             anchors.rightMargin: 40
             anchors.fill: parent
+            Item {
+                id: backBtn
+                width: 30
+                height: 30
+                anchors.topMargin: 10
+                Text {
+                    text: "<<"
+                    font.pixelSize: Styling._SIZE_F3
+                    anchors.centerIn: parent
+                }
+                Rectangle {
+                    anchors.fill: parent
+                    color: Styling._COLOR_ORANGE
+                    z: -1
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: requestChangePage("order");
+                }
+            }
+
             Text {
                 id: title
                 text: "Thực Đơn"
                 color: Styling._COLOR_BLACK
                 font.pixelSize: Styling._SIZE_F4
-                anchors.left : parent.left
+                anchors.left : backBtn.right
                 anchors.leftMargin: 20
             }
             //list of food
