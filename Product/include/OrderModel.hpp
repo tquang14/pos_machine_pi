@@ -14,10 +14,12 @@ Q_GADGET
     Q_PROPERTY(QString image MEMBER m_image)
     Q_PROPERTY(QString name MEMBER m_name)
     Q_PROPERTY(QString price MEMBER m_price)
+    Q_PROPERTY(QString quantity MEMBER m_quantity)
 public:
     QString m_image;
     QString m_name;
     QString m_price;
+    QString m_quantity;
 };
 
 class OrderModel : public QObject {

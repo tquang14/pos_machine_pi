@@ -39,7 +39,7 @@ void OrderModel::getMenuListFromDB() {
         m_query->exec(queryStr);
         while(m_query->next()) {
             QSqlRecord record = m_query->record();
-            m_listItem << Item{record.value(0).toString(), record.value(1).toString(), record.value(2).toString()};
+            m_listItem << Item{record.value(0).toString(), record.value(1).toString(), record.value(2).toString(), record.value(3).toString()};
         }
     }
 }

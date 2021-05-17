@@ -221,7 +221,7 @@ Item {
             Component.onCompleted: {
                 for (var i in orderModel.listItem) {
                     var p = orderModel.listItem[i];
-                    foodModel.append({name: p.name, imageP: "qrc:/Images/" + p.image, price: p.price})
+                    foodModel.append({name: p.name, imageP: "qrc:/Images/" + p.image, price: p.price, quantity: p.quantity})
                 }
                 menu.model = foodModel
             }
@@ -240,24 +240,28 @@ Item {
                 delegate: Card {
                     textContent: name
                     textContentSize: Styling._SIZE_F2
+                    textQuantity: "[" + quantity + "]"
                     imgPath: imageP
                     cardWidth: menu.width
+                    overlayVisible: quantity <= 0? true : false
                     cardHeight: 70
                     cardColor: Styling._COLOR_WHITE
                     subTextContent: addSeparatorsNF(price, ",", " ") + "-VND"
                     subTextContentSize: Styling._SIZE_F2
                     onCardClicked: {
-                        var contentThisItem = false
-                        for (var i = 0; i < billModel.rowCount(); i++) {
-                            if (billModel.get(i).name === name) {
-                                billModel.get(i).numOfItem += 1
-                                contentThisItem = true
+                        if (quantity > 0) {
+                            var containThisItemInList = false
+                            for (var i = 0; i < billModel.rowCount(); i++) {
+                                if (billModel.get(i).name === name) {
+                                    billModel.get(i).numOfItem += 1
+                                    containThisItemInList = true
+                                }
                             }
-                        }
-                        if (!contentThisItem)
-                            billModel.append({name: name, imageP: imageP, price: price, numOfItem: 1})
+                            if (!containThisItemInList)
+                                billModel.append({name: name, imageP: imageP, price: price, numOfItem: 1})
 
-                        totalMoney.total = parseInt(totalMoney.total) + parseInt(price)
+                            totalMoney.total = parseInt(totalMoney.total) + parseInt(price)
+                        }
                     }
                 }
             }

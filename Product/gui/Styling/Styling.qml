@@ -19,6 +19,7 @@ QtObject {
     readonly property color _COLOR_WHITE: "#ffffff"
     readonly property color _COLOR_ORANGE: "#fab919"
     readonly property color _COLOR_YELLOW: "#fff200"
+    readonly property color _COLOR_GRAY: "#91959c"
 
     //Font
     readonly property string _DEFAULT_FONT: "Comic Sans MS"
