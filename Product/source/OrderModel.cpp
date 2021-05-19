@@ -12,8 +12,10 @@ OrderModel::OrderModel(QObject *parent)
 }
 
 OrderModel::~OrderModel() {
+    m_db->close();
     delete m_query;
     delete m_db;
+    QSqlDatabase::removeDatabase("qt_sql_default_connection");
 }
 
 void OrderModel::initDB() {
@@ -56,7 +58,37 @@ bool OrderModel::order(QVariantList nameItem, int totalMoney)
 
     const QString queryStr = "INSERT INTO receipt (id, dishes, totalMoney) VALUES(NULL, '"
                            + receiptContent + "'," + "'" + QString::number(totalMoney) + "')";
-    if (m_dbStatus)
+    if (m_dbStatus) {
+        decreaseQuantityOfItemInDB(nameItem);
         return m_query->exec(queryStr);
+    }
     return false;
+}
+
+void OrderModel::decreaseQuantityOfItemInDB(QVariantList orderList) {
+
+    // loop throught the list and decrease each item one by one
+    for (auto element : orderList) {
+        QList <QVariant> list = element.toList();
+        // get name of item to be decrease quantity
+        const QString name = list[0].toString();
+        // find this item in menu list
+        auto result = std::find_if(
+            m_listItem.begin(),
+            m_listItem.end(),
+            [&name](Item const& c) {
+                return c.m_name == name;
+            }
+        );
+        // if menu list contain this item, decrease it by 1
+        //TODO: handle case this item not in menu list
+        if (result != m_listItem.end()) {
+            result->m_quantity = QString::number(result->m_quantity.toInt() - list[1].toInt());
+//            auto quantity = result->m_quantity.toInt() - list[1].toInt();
+            const QString queryStr = "UPDATE menu SET quantity = '" + result->m_quantity
+                                   + "' WHERE name = '" + name + "'";
+            m_query->exec(queryStr);
+        }
+    }
+    emit onListItemChanged();
 }

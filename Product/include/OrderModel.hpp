@@ -25,7 +25,7 @@ public:
 class OrderModel : public QObject {
 
 Q_OBJECT
-    Q_PROPERTY(QVariantList listItem READ getListItem)
+    Q_PROPERTY(QVariantList listItem READ getListItem NOTIFY onListItemChanged)
 
 public:
     //!
@@ -47,7 +47,19 @@ public slots:
 
     bool order(QVariantList nameItem, int totalMoney);
 
+signals:
+    //!
+    //! \brief onListItemChanged
+    //!
+    void onListItemChanged();
+
 private:
+    //!
+    //! \brief decreaseQuantityOfItemInDB
+    //! \param orderList
+    //!
+    void decreaseQuantityOfItemInDB(QVariantList orderList);
+
     //!
     //! \brief initDB
     //!

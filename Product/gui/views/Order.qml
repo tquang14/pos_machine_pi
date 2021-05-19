@@ -28,6 +28,26 @@ Item {
         }
         return itemList
     }
+    function updateDataInMenu() {
+        // if first time load this qml file, add new to food model
+        if(foodModel.rowCount() <= 0) {
+            for (var i in orderModel.listItem) {
+                var p = orderModel.listItem[i];
+                foodModel.append({name: p.name, imageP: "qrc:/Images/" + p.image, price: p.price, quantity: p.quantity})
+            }
+            menu.model = foodModel
+        }
+        // else update quantity of an item in this food model
+        else {
+            // find this item in the list
+            for (var j = 0; i < foodModel.rowCount(); i++) {
+                if (foodModel.get(j).quantity !== orderModel.listItem[j].quantity) {
+                    foodModel.get(j).quantity = orderModel.listItem[j].quantity
+                }
+            }
+        }
+    }
+
     // notification to inform when the order success
     // TODO: add warning when order is null
     Loader {
@@ -65,6 +85,7 @@ Item {
 
     OrderModel {
         id: orderModel
+        onOnListItemChanged: updateDataInMenu()
     }
     //background
     Rectangle {
@@ -219,11 +240,7 @@ Item {
                 id: foodModel
             }
             Component.onCompleted: {
-                for (var i in orderModel.listItem) {
-                    var p = orderModel.listItem[i];
-                    foodModel.append({name: p.name, imageP: "qrc:/Images/" + p.image, price: p.price, quantity: p.quantity})
-                }
-                menu.model = foodModel
+                updateDataInMenu()
             }
 
             ListView {
@@ -249,7 +266,9 @@ Item {
                     subTextContent: addSeparatorsNF(price, ",", " ") + "-VND"
                     subTextContentSize: Styling._SIZE_F2
                     onCardClicked: {
+                        // check if quantity > 0 allow to add this item to billModel then decrease quantity by 1
                         if (quantity > 0) {
+                            // if this item already order, increase quantity of this item in bill model by 1 else add it to model with quantity = 1
                             var containThisItemInList = false
                             for (var i = 0; i < billModel.rowCount(); i++) {
                                 if (billModel.get(i).name === name) {
@@ -261,6 +280,8 @@ Item {
                                 billModel.append({name: name, imageP: imageP, price: price, numOfItem: 1})
 
                             totalMoney.total = parseInt(totalMoney.total) + parseInt(price)
+                            // convert to int to decrease quantity by 1 then convert it back to string
+                            quantity = (parseInt(quantity) - 1) + ""
                         }
                     }
                 }
