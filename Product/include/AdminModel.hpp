@@ -22,10 +22,22 @@ public:
     QString m_price;
 };
 
+struct inventory {
+    Q_GADGET
+        Q_PROPERTY(QString name MEMBER m_name)
+        Q_PROPERTY(QString quantity MEMBER m_quantity)
+        Q_PROPERTY(QString expDate MEMBER m_expDate)
+    public:
+        QString m_name;
+        QString m_quantity;
+        QString m_expDate;
+};
+
 class AdminModel : public QObject {
 
 Q_OBJECT
     Q_PROPERTY(QVariantList listReceipt READ getListReceipt)
+    Q_PROPERTY(QVariantList inventory READ getInventory)
 
 public:
     //!
@@ -51,14 +63,30 @@ private:
     QVariantList getListReceipt() const;
 
     //!
+    //! \brief getInventory
+    //! \return list contain all item in inventory
+    //!
+    QVariantList getInventory() const;
+
+    //!
     //! \brief getAllReceiptFromDB
     //!
     void getAllReceiptFromDB();
 
     //!
+    //! \brief getInventoryFromDB
+    //!
+    void getInventoryFromDB();
+
+    //!
     //! \brief m_listReceipt
     //!
     QVector<receipt> m_listReceipt;
+
+    //!
+    //! \brief m_inventory
+    //!
+    QVector<inventory> m_inventory;
 
     //!
     //! \brief m_db

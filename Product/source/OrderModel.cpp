@@ -15,7 +15,7 @@ OrderModel::~OrderModel() {
     m_db->close();
     delete m_query;
     delete m_db;
-    QSqlDatabase::removeDatabase("qt_sql_default_connection");
+    QSqlDatabase::removeDatabase(CONNECTION_NAME);
 }
 
 void OrderModel::initDB() {

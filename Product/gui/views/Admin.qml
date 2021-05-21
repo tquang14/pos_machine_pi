@@ -1,13 +1,16 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.0
 import com.AdminModel 1.0
+import QtQml 2.0
 //import Qt.labs.qmlmodels 1.0
 import "../Styling"
 import "../components"
 Item {
     width: Styling._DISPLAY_WIDTH
     height: Styling._DISPLAY_HEIGHT
-
+//    property var locale: Qt.locale()
+//    property string dateTimeString: "21-05-2021"
+//    property date currentDate: new Date()
 
     signal requestChangePage(var identify)
     AdminModel {
@@ -21,6 +24,16 @@ Item {
             listReceipt.push([i, p.ID, p.content, p.price, p.dateTime])
         }
         tableIncome.dataModel = listReceipt
+
+        var inventory = []
+
+        for (var i in adminModel.inventory) {
+            var p = adminModel.inventory[i]
+            inventory.push([i, p.name, p.quantity, p.expDate])
+
+        }
+        tableWarehouse.dataModel = inventory
+//        console.log("aaaaaaaaaaa: " + Date.fromLocaleString(locale, dateTimeString, "dd-MM-yyyy"))
     }
 
     //background
@@ -167,21 +180,7 @@ Item {
                         {text: "Thời gian đến hạn"  ,   width: 0.3},
                     ]
 
-                    dataModel: [ // TODO: remove dummy data use cpp
-                        ["1 ", " ", " ", " "],
-                        ["2 ", " ", " ", " "],
-                        ["4 ", " ", " ", " "],
-                        ["3 ", " ", " ", " "],
-                        ["5 ", " ", " ", " "],
-                        ["6 ", " ", " ", " "],
-                        ["7 ", " ", " ", " "],
-                        ["8 ", " ", " ", " "],
-                        ["9 ", " ", " ", " "],
-                        ["10 ", " ", " ", " "],
-                        ["11 ", " ", " ", " "],
-                        ["12 ", " ", " ", " "],
-                        ["13 ", " ", " ", " "],
-                    ]
+                    dataModel: []
                 }
             }
         }

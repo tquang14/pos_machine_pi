@@ -98,16 +98,7 @@ Item { // size controlled by width
                             font.pixelSize: 0.03 * root.width
                             wrapMode: Text.WordWrap
                             clip: true
-                            Component.onCompleted: {
-                                // maximum height of a row is 25 char so 2 row is 50
-                                // so just need to display 50 char then append ...
-                                if (lineCount > 2) {
-                                    var str = modelData.substring(0, 50)
-                                    str += "..."
-                                    text = str
-                                    console.log(str)
-                                }
-                            }
+                            maximumLineCount: 2
                         }
                     }
                 }
