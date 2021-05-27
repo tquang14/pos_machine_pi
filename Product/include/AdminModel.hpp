@@ -27,10 +27,12 @@ struct inventory {
         Q_PROPERTY(QString name MEMBER m_name)
         Q_PROPERTY(QString quantity MEMBER m_quantity)
         Q_PROPERTY(QString expDate MEMBER m_expDate)
+        Q_PROPERTY(bool isExpired MEMBER m_isExpired)
     public:
         QString m_name;
         QString m_quantity;
         QString m_expDate;
+        bool m_isExpired;
 };
 
 class AdminModel : public QObject {

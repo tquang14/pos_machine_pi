@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QDate>
 
 #include "../include/AdminModel.hpp"
 #include "../include/ProjectConst.hpp"
@@ -41,11 +42,16 @@ void AdminModel::getAllReceiptFromDB() {
 
 void AdminModel::getInventoryFromDB() {
     if (m_dbStatus) {
+        //get the current datetime to caculate the item is expired or not
+        auto currentDate = QDate::currentDate();
         const QString queryStr = "SELECT name, quantity, expDate FROM menu";
         m_query->exec(queryStr);
         while (m_query->next()) {
             QSqlRecord record = m_query->record();
-            m_inventory << inventory{record.value(0).toString(), record.value(1).toString(), record.value(2).toString()};
+            auto tmp = QDate::fromString( record.value(2).toString(), "dd'-'MM'-'yyyy" );
+            bool isExpired = currentDate > tmp;
+            qDebug() << record.value(0).toString() << "\n\t" << "isExpired:\t" << isExpired;
+            m_inventory << inventory{record.value(0).toString(), record.value(1).toString(), record.value(2).toString(), isExpired};
         }
     }
 }

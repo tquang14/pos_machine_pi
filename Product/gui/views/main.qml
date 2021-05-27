@@ -6,8 +6,9 @@ ApplicationWindow {
     width: Styling._DISPLAY_WIDTH
     height: Styling._DISPLAY_HEIGHT
     visible: true
-//    visibility: "FullScreen"
+    visibility: (SCREEN_WIDTH <= 480 && SCREEN_HEIGHT <= 800)? "FullScreen" : "Windowed"
     title: qsTr("Nhà hàng KMT")
+
     StackView {
         id: stackView
         anchors.fill: parent

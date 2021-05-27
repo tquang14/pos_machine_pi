@@ -11,28 +11,29 @@ Item {
 //    property var locale: Qt.locale()
 //    property string dateTimeString: "21-05-2021"
 //    property date currentDate: new Date()
-
+    property var listOfAllReceipt: []
     signal requestChangePage(var identify)
     AdminModel {
         id: adminModel
     }
     Component.onCompleted: {
-        var listReceipt  = []
+//        var listReceipt  = []
 
         for (var i in adminModel.listReceipt) {
             var p = adminModel.listReceipt[i]
-            listReceipt.push([i, p.ID, p.content, p.price, p.dateTime])
+            listOfAllReceipt.push([i, p.ID, p.content, p.price, p.dateTime])
         }
-        tableIncome.dataModel = listReceipt
+        tableIncome.dataModel = listOfAllReceipt
 
         var inventory = []
-
-        for (var i in adminModel.inventory) {
-            var p = adminModel.inventory[i]
+        var isExpired = []
+        for (i in adminModel.inventory) {
+            p = adminModel.inventory[i]
             inventory.push([i, p.name, p.quantity, p.expDate])
-
+            isExpired.push(p.isExpired)
         }
         tableWarehouse.dataModel = inventory
+        tableWarehouse.highlightModel = isExpired
 //        console.log("aaaaaaaaaaa: " + Date.fromLocaleString(locale, dateTimeString, "dd-MM-yyyy"))
     }
 
@@ -181,6 +182,9 @@ Item {
                     ]
 
                     dataModel: []
+                    isUseHighlight: true
+                    highlightColor: Styling._COLOR_ORANGE
+                    highlightModel: []
                 }
             }
         }

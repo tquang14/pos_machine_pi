@@ -3,6 +3,8 @@ import QtQuick.Controls 2.2
 Item { // size controlled by width
     id: root
     property color bgColor: "#ffffff"
+    property color highlightColor: "transparent"
+    property bool isUseHighlight: false
     Rectangle {
         anchors.fill: parent
         color: bgColor
@@ -19,6 +21,8 @@ Item { // size controlled by width
         // ['green', '#00ff00'],
         // ['blue',  '#0000ff'],
     ]
+
+    property variant highlightModel: []
 
     signal clicked(int row, variant rowData);  //onClicked: print('onClicked', row, JSON.stringify(rowData))
 
@@ -101,6 +105,16 @@ Item { // size controlled by width
                             maximumLineCount: 2
                         }
                     }
+                }
+            }
+
+            Loader {
+                anchors.fill: parent
+                active: isUseHighlight
+                sourceComponent: Rectangle {
+                    anchors.fill: parent
+                    color: isUseHighlight? (highlightModel[index]? highlightColor : "transparent") : "transparent"
+                    opacity: 0.3
                 }
             }
 
