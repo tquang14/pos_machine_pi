@@ -52,6 +52,16 @@ public:
     //! \brief destructor
     //!
     ~AdminModel();
+
+public slots:
+
+    //!
+    //! \brief clearQuantityOfItemFromInventory
+    //! \param itemNameW
+    //! \return true if remove success
+    //!
+    bool clearQuantityOfItemFromInventory(QString itemName);
+
 private:
     //!
     //! \brief initDB

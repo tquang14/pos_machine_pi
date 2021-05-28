@@ -19,6 +19,15 @@ AdminModel::~AdminModel() {
     QSqlDatabase::removeDatabase(CONNECTION_NAME);
 }
 
+bool AdminModel::clearQuantityOfItemFromInventory(QString itemName)
+{
+    if (!m_dbStatus)
+        return false;
+    const QString queryStr = "UPDATE menu SET quantity = 0 WHERE name = '" + itemName +"'";
+    qDebug() << queryStr;
+    return true; //m_query->exec(queryStr);
+}
+
 void AdminModel::initDB() {
     m_db = new QSqlDatabase();
     *m_db = QSqlDatabase::addDatabase(DB_TYPE);
@@ -50,7 +59,6 @@ void AdminModel::getInventoryFromDB() {
             QSqlRecord record = m_query->record();
             auto tmp = QDate::fromString( record.value(2).toString(), "dd'-'MM'-'yyyy" );
             bool isExpired = currentDate > tmp;
-            qDebug() << record.value(0).toString() << "\n\t" << "isExpired:\t" << isExpired;
             m_inventory << inventory{record.value(0).toString(), record.value(1).toString(), record.value(2).toString(), isExpired};
         }
     }
