@@ -30,7 +30,7 @@ Item {
         for (i in adminModel.inventory) {
             p = adminModel.inventory[i]
             inventory.push([i, p.name, p.quantity, p.expDate])
-            colorForEachRow.push( parseInt(p.quantity) <= 0 ? Styling._COLOR_GRAY : p.isExpired ? Styling._COLOR_ORANGE : "transparent")
+            colorForEachRow.push(parseInt(p.quantity) <= 0 ? Styling._COLOR_GRAY : p.isExpired ? Styling._COLOR_ORANGE : "transparent")
         }
         tableWarehouse.dataModel = inventory
         tableWarehouse.highlightModel = colorForEachRow
@@ -39,7 +39,7 @@ Item {
 
     // notification to confirm if user want to clear quantity of item in iventory
     Loader {
-        id: notification
+        id: confirmClearNoti
         width: 500
         height: 150
         anchors.centerIn: parent
@@ -67,10 +67,18 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 30
                 MyButton {
+                    id: okBtn
+                    property int rowOfItemToClearQuantity: 0
                     textContent: "OK"
+                    onBtnClicked: {
+                        if (adminModel.clearQuantityOfItemFromInventory(tableWarehouse.dataModel[rowOfItemToClearQuantity][1]))
+                            tableWarehouse.requestUpdateDataModel(rowOfItemToClearQuantity, 2, 0)
+                        confirmClearNoti.visible = false
+                    }
                 }
                 MyButton {
                     textContent: "Cancel"
+                    onBtnClicked: confirmClearNoti.visible = false
                 }
             }
 
@@ -209,6 +217,12 @@ Item {
                 }
                 Table {
                     id: tableWarehouse
+                    signal requestUpdateDataModel(var row, var col, var newData)
+                    onRequestUpdateDataModel: {
+                        dataModel[row][col] = newData
+                        highlightModel[row] = parseInt(dataModel[row][2]) <= 0 ? Styling._COLOR_GRAY : adminModel.inventory[row].isExpired ? Styling._COLOR_ORANGE : "transparent"//recalculate highlight model as data had changed
+                        dataModelChanged()
+                    }
                     width: parent.width - 60
                     height: parent.height - 80
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -222,8 +236,17 @@ Item {
                     ]
                     onClicked: {
                         // if quantity of clicked item > 0 allow to clear
-                        if (rowData[2] > 0)
-                            adminModel.clearQuantityOfItemFromInventory(rowData[1])
+                        if (rowData[2] > 0) {
+                            // if the food hadn't expired but click to clear quantity Popup notification to confirm
+                            if (!adminModel.inventory[row].isExpired) {
+                                confirmClearNoti.visible = true
+                                okBtn.rowOfItemToClearQuantity = row
+                            }
+                            //else clear quantity of tthe food
+                            else
+                                if (adminModel.clearQuantityOfItemFromInventory(rowData[1]))
+                                    requestUpdateDataModel(row, 2, 0)
+                        }
                     }
 
                     dataModel: []

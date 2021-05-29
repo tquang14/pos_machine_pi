@@ -71,9 +71,8 @@ Item { // size controlled by width
         anchors{fill: parent;  topMargin: header.height}
         interactive: contentHeight > height
         clip: true
-
+        cacheBuffer: 100 // improve performance when scroll
         model: dataModel
-
         delegate: Item { // row
             width: root.width;  height: header.height
             opacity: !mouseArea.pressed? 1: 0.3 // pressed state
