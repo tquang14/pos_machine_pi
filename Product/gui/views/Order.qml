@@ -159,7 +159,7 @@ Item {
 
                 Text {
                     id: headline
-                    text: "TẠM TÍNH"
+                    text: "TOTAL"
                     font.pixelSize: Styling._SIZE_F1
                     anchors.left: parent.left
                     anchors.margins: 10
@@ -168,7 +168,7 @@ Item {
                 Text {
                     id: totalMoney
                     property int total: 0
-                    text: addSeparatorsNF(total, ",", " ") + "-VNĐ"
+                    text: addSeparatorsNF(total, ",", " ") + "-VND"
                     color: Styling._COLOR_RED
                     font.pixelSize: Styling._SIZE_F1
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -229,7 +229,7 @@ Item {
 
             Text {
                 id: title
-                text: "Thực Đơn"
+                text: "MENU"
                 color: Styling._COLOR_BLACK
                 font.pixelSize: Styling._SIZE_F4
                 anchors.left : backBtn.right

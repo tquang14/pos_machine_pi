@@ -26,15 +26,63 @@ Item {
         tableIncome.dataModel = listOfAllReceipt
 
         var inventory = []
-        var isExpired = []
+        var colorForEachRow = []
         for (i in adminModel.inventory) {
             p = adminModel.inventory[i]
             inventory.push([i, p.name, p.quantity, p.expDate])
-            isExpired.push(p.isExpired)
+            colorForEachRow.push(parseInt(p.quantity) <= 0 ? Styling._COLOR_GRAY : p.isExpired ? Styling._COLOR_ORANGE : "transparent")
         }
         tableWarehouse.dataModel = inventory
-        tableWarehouse.highlightModel = isExpired
+        tableWarehouse.highlightModel = colorForEachRow
 //        console.log("aaaaaaaaaaa: " + Date.fromLocaleString(locale, dateTimeString, "dd-MM-yyyy"))
+    }
+
+    // notification to confirm if user want to clear quantity of item in iventory
+    Loader {
+        id: confirmClearNoti
+        width: 500
+        height: 150
+        anchors.centerIn: parent
+        visible: false
+        z: 100
+        Item {
+            id: container
+            anchors.fill: parent
+
+            Rectangle {
+                anchors.fill: parent
+                color: Styling._COLOR_ORANGE
+                radius: 30
+            }
+            Text {
+                id: info
+                text: "Are you sure you want to remove this item?"
+                font.pixelSize: Styling._SIZE_F4
+                horizontalAlignment: Text.AlignHCenter
+                width: parent.width
+                wrapMode: Text.WordWrap
+            }
+            Row {
+                anchors.top: info.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 30
+                MyButton {
+                    id: okBtn
+                    property int rowOfItemToClearQuantity: 0
+                    textContent: "OK"
+                    onBtnClicked: {
+                        if (adminModel.clearQuantityOfItemFromInventory(tableWarehouse.dataModel[rowOfItemToClearQuantity][1]))
+                            tableWarehouse.requestUpdateDataModel(rowOfItemToClearQuantity, 2, 0)
+                        confirmClearNoti.visible = false
+                    }
+                }
+                MyButton {
+                    textContent: "Cancel"
+                    onBtnClicked: confirmClearNoti.visible = false
+                }
+            }
+
+        }
     }
 
     //background
@@ -85,7 +133,7 @@ Item {
         height: 30
         anchors.top: headLine.bottom
         Repeater {
-            model: ["Doanh thu", "Tồn kho"]
+            model: ["Income", "Warehouse"]
             TabButton {
                 contentItem: Text {
                     text: modelData
@@ -125,11 +173,11 @@ Item {
                     anchors.top: parent.top
                     anchors.topMargin: 15
                     headerModel: [ // widths must add to 1
-                        {text: "STT"        ,   width: 0.1},
-                        {text: "ID"         ,   width: 0.15},
-                        {text: "Món"        ,   width: 0.35},
-                        {text: "Thời gian"  ,   width: 0.2},
-                        {text: "Thành tiền" ,   width: 0.2},
+                        {text: "Order"          ,   width: 0.1},
+                        {text: "ID"             ,   width: 0.15},
+                        {text: "Food"           ,   width: 0.35},
+                        {text: "Datetime"       ,   width: 0.2},
+                        {text: "Income"         ,   width: 0.2},
                     ]
 
                     dataModel: []
@@ -150,7 +198,7 @@ Item {
                     Text {
                         id: totalIncome
                         anchors.verticalCenter: parent.verticalCenter
-                        text: "Tổng doanh thu (ngày): "
+                        text: "Total income (day) "
                         color: Styling._COLOR_RED
                         font.pixelSize: Styling._SIZE_F2
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -169,21 +217,40 @@ Item {
                 }
                 Table {
                     id: tableWarehouse
+                    signal requestUpdateDataModel(var row, var col, var newData)
+                    onRequestUpdateDataModel: {
+                        dataModel[row][col] = newData
+                        highlightModel[row] = parseInt(dataModel[row][2]) <= 0 ? Styling._COLOR_GRAY : adminModel.inventory[row].isExpired ? Styling._COLOR_ORANGE : "transparent"//recalculate highlight model as data had changed
+                        dataModelChanged()
+                    }
                     width: parent.width - 60
                     height: parent.height - 80
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: parent.top
                     anchors.topMargin: 15
                     headerModel: [ // widths must add to 1
-                        {text: "STT"                ,   width: 0.1},
-                        {text: "Món"                ,   width: 0.45},
-                        {text: "Số lượng"           ,   width: 0.15},
-                        {text: "Thời gian đến hạn"  ,   width: 0.3},
+                        {text: "Order"               ,   width: 0.1},
+                        {text: "Food"                ,   width: 0.45},
+                        {text: "Quantity"            ,   width: 0.15},
+                        {text: "Expire date"         ,   width: 0.3},
                     ]
+                    onClicked: {
+                        // if quantity of clicked item > 0 allow to clear
+                        if (rowData[2] > 0) {
+                            // if the food hadn't expired but click to clear quantity Popup notification to confirm
+                            if (!adminModel.inventory[row].isExpired) {
+                                confirmClearNoti.visible = true
+                                okBtn.rowOfItemToClearQuantity = row
+                            }
+                            //else clear quantity of tthe food
+                            else
+                                if (adminModel.clearQuantityOfItemFromInventory(rowData[1]))
+                                    requestUpdateDataModel(row, 2, 0)
+                        }
+                    }
 
                     dataModel: []
                     isUseHighlight: true
-                    highlightColor: Styling._COLOR_ORANGE
                     highlightModel: []
                 }
             }
