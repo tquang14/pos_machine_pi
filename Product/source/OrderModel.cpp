@@ -16,6 +16,8 @@ OrderModel::~OrderModel() {
     delete m_query;
     delete m_db;
     QSqlDatabase::removeDatabase(CONNECTION_NAME);
+    m_query = nullptr;
+    m_db = nullptr;
 }
 
 void OrderModel::initDB() {

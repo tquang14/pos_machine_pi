@@ -12,14 +12,20 @@ Item {
 //    property string dateTimeString: "21-05-2021"
 //    property date currentDate: new Date()
     property var choosenDate: new Date() // set default choose date is current day
+    property int income: 0
     signal requestChangePage(var identify)
 
     function updateTableIncome() {
         var listOfAllReceipt = []
+        var count = 0
+        income = 0
         for (var i in adminModel.listReceipt) {
             var p = adminModel.listReceipt[i]
-            if (p.dateTime.substring(0, 10) === Qt.formatDate(choosenDate, 'yyyy-MM-dd'))
-                listOfAllReceipt.push([i, p.ID, p.content, p.dateTime, p.price])
+            if (p.dateTime.substring(0, 10) === Qt.formatDate(choosenDate, 'yyyy-MM-dd')) {
+                income += parseInt(p.price)
+                count++
+                listOfAllReceipt.push([count, p.ID, p.content, p.dateTime, p.price])
+            }
         }
         tableIncome.dataModel = listOfAllReceipt
     }
@@ -204,7 +210,7 @@ Item {
                     Text {
                         id: totalIncome
                         anchors.verticalCenter: parent.verticalCenter
-                        text: "Total income (day) "
+                        text: "Total income (day): " + income + "VND"
                         color: Styling._COLOR_RED
                         font.pixelSize: Styling._SIZE_F2
                         anchors.horizontalCenter: parent.horizontalCenter

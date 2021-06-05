@@ -40,7 +40,7 @@ Item {
         // else update quantity of an item in this food model
         else {
             // find this item in the list
-            for (var j = 0; i < foodModel.rowCount(); i++) {
+            for (var j = 0; j < foodModel.rowCount(); j++) {
                 if (foodModel.get(j).quantity !== orderModel.listItem[j].quantity) {
                     foodModel.get(j).quantity = orderModel.listItem[j].quantity
                 }
@@ -182,12 +182,34 @@ Item {
                     anchors.right: parent.right
                     btnColor: Styling._COLOR_ORANGE
                     textContent: "APPLY"
-                    btnWidth: 70
+                    btnWidth: 80
                     onBtnClicked: {
-                        if (orderModel.order(getReceipt(), totalMoney.total)) {
+                        if (billModel.rowCount() > 0) {
+                            if (orderModel.order(getReceipt(), totalMoney.total)) {
+                                status.text = "Order success"
+                                notification.visible = true
+                                hideNotiTimer.start()
+                            }
+                            billModel.clear()
+                            totalMoney.total = 0
+                        } else {
+                            status.text = "Empty order"
                             notification.visible = true
                             hideNotiTimer.start()
                         }
+                    }
+                }
+                // cancel Button
+                MyButton {
+                    id: cancelBtn
+                    anchors.top: totalMoney.bottom
+                    anchors.topMargin: 6
+                    anchors.left: parent.left
+                    btnColor: Styling._COLOR_ORANGE
+                    textContent: "CANCEL"
+                    btnWidth: 80
+                    onBtnClicked: {
+                        updateDataInMenu()
                         billModel.clear()
                         totalMoney.total = 0
                     }
