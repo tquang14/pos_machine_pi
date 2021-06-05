@@ -11,24 +11,30 @@ Item {
 //    property var locale: Qt.locale()
 //    property string dateTimeString: "21-05-2021"
 //    property date currentDate: new Date()
-    property var listOfAllReceipt: []
+    property var choosenDate: new Date() // set default choose date is current day
     signal requestChangePage(var identify)
+
+    function updateTableIncome() {
+        var listOfAllReceipt = []
+        for (var i in adminModel.listReceipt) {
+            var p = adminModel.listReceipt[i]
+            if (p.dateTime.substring(0, 10) === Qt.formatDate(choosenDate, 'yyyy-MM-dd'))
+                listOfAllReceipt.push([i, p.ID, p.content, p.dateTime, p.price])
+        }
+        tableIncome.dataModel = listOfAllReceipt
+    }
+
     AdminModel {
         id: adminModel
     }
     Component.onCompleted: {
-//        var listReceipt  = []
 
-        for (var i in adminModel.listReceipt) {
-            var p = adminModel.listReceipt[i]
-            listOfAllReceipt.push([i, p.ID, p.content, p.price, p.dateTime])
-        }
-        tableIncome.dataModel = listOfAllReceipt
+        updateTableIncome()
 
         var inventory = []
         var colorForEachRow = []
-        for (i in adminModel.inventory) {
-            p = adminModel.inventory[i]
+        for (var i in adminModel.inventory) {
+            var p = adminModel.inventory[i]
             inventory.push([i, p.name, p.quantity, p.expDate])
             colorForEachRow.push(parseInt(p.quantity) <= 0 ? Styling._COLOR_GRAY : p.isExpired ? Styling._COLOR_ORANGE : "transparent")
         }
@@ -290,9 +296,13 @@ Item {
             width: parent.width
             height: parent.height
             onClicked: {
-                console.log('onClicked' + Qt.formatDate(date, 'dd/MM/yyyy'))
+                if (Qt.formatDate(date, 'dd/MM/yyyy') !== Qt.formatDate(choosenDate, 'dd/MM/yyyy'))
+                    choosenDate = date
             }
-            Component.onCompleted: set(new Date())
+            Component.onCompleted: set(choosenDate)
         }
+    }
+    onChoosenDateChanged: {
+        updateTableIncome()
     }
 }

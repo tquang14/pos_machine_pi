@@ -6,7 +6,8 @@ ApplicationWindow {
     width: Styling._DISPLAY_WIDTH
     height: Styling._DISPLAY_HEIGHT
     visible: true
-    visibility: (SCREEN_WIDTH <= 480 && SCREEN_HEIGHT <= 800)? "FullScreen" : "Windowed"
+    visibility: (SCREEN_WIDTH <= 800 && SCREEN_HEIGHT <= 480)? "FullScreen" : "Windowed"
+    Component.onCompleted: console.log(SCREEN_WIDTH + " " + SCREEN_HEIGHT )
     title: qsTr("Nhà hàng KMT")
 
     StackView {

@@ -13,13 +13,13 @@ struct receipt {
 Q_GADGET
     Q_PROPERTY(QString ID MEMBER m_ID)
     Q_PROPERTY(QString content MEMBER m_content)
-    Q_PROPERTY(QString dateTime MEMBER m_dateTime)
     Q_PROPERTY(QString price MEMBER m_price)
+    Q_PROPERTY(QString dateTime MEMBER m_dateTime)
 public:
     QString m_ID;
     QString m_content;
-    QString m_dateTime;
     QString m_price;
+    QString m_dateTime;
 };
 
 struct inventory {
