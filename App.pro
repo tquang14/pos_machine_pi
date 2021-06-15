@@ -2,6 +2,7 @@ QT += quick
 QT += sql
 QT += widgets
 QT += core
+QT += network
 CONFIG += c++11
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -16,13 +17,15 @@ SOURCES += \
         main.cpp \
         $${SOURCES_PATH}/backend.cpp \
         $${SOURCES_PATH}/AdminModel.cpp \
-        $${SOURCES_PATH}/OrderModel.cpp
+        $${SOURCES_PATH}/OrderModel.cpp \
+        $${SOURCES_PATH}/serversocket.cpp
 
 HEADERS += \
         $${INCLUDE_PATH}/backend.hpp \
         $${INCLUDE_PATH}/ProjectConst.hpp \
         $${INCLUDE_PATH}/AdminModel.hpp \
-        $${INCLUDE_PATH}/OrderModel.hpp
+        $${INCLUDE_PATH}/OrderModel.hpp \
+        $${INCLUDE_PATH}/serversocket.h
 
 RESOURCES += qml.qrc \
     Image.qrc

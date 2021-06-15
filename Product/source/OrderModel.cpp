@@ -1,8 +1,10 @@
 #include <QDebug>
+#include <QDateTime>
+#include <QRandomGenerator>
 
 #include "../include/OrderModel.hpp"
 #include "../include/ProjectConst.hpp"
-
+#include "../include/serversocket.h"
 OrderModel::OrderModel(QObject *parent)
             : QObject (parent)
 {
@@ -57,12 +59,18 @@ bool OrderModel::order(QVariantList nameItem, int totalMoney)
     }
     // remove the last ", " because in the loop we add it
     receiptContent = receiptContent.left(receiptContent.lastIndexOf(", "));
-
-    const QString queryStr = "INSERT INTO receipt (id, dishes, totalMoney) VALUES(NULL, '"
+    // generate random ID
+    quint32 ID = QRandomGenerator::global()->generate() % 1000000;
+    const QString queryStr = "INSERT INTO receipt (id, dishes, totalMoney) VALUES('" + QString::number(ID) + "', '"
                            + receiptContent + "'," + "'" + QString::number(totalMoney) + "')";
     if (m_dbStatus) {
+        // modify database
         decreaseQuantityOfItemInDB(nameItem);
-        return m_query->exec(queryStr);
+        bool success = m_query->exec(queryStr);
+        //transfer data to kitchen
+        auto &serverSocker = serverSocket::getServerInstance();
+        serverSocker.transferDataToClient(receiptContent + " ID: " + QString::number(ID));
+        return success;
     }
     return false;
 }

@@ -9,6 +9,7 @@
 //project import
 #include "Product/include/OrderModel.hpp"
 #include "Product/include/AdminModel.hpp"
+#include "Product/include/serversocket.h"
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -36,6 +37,10 @@ int main(int argc, char *argv[])
     screenResolution.append({"SCREEN_HEIGHT", mainScreenSize.height()});
 
     engine.rootContext()->setContextProperties(screenResolution);
+
+    // create socket server and send to qml
+    serverSocket &server = serverSocket::getServerInstance();
+    engine.rootContext()->setContextProperty("server", &server);
 
     engine.load(url);
 
