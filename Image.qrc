@@ -1,7 +1,7 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
     <qresource prefix="/Images">
-    	<file alias="HomeSideIMG.jpg">Resource/HomeSideIMG.jpg</file>
+	<file alias="HomeSideIMG.jpg">Resource/HomeSideIMG.jpg</file>
 	<file alias="garan.jpg">Resource/garan.jpg</file>
 	<file alias="gaquay.jpg">Resource/gaquay.jpg</file>
 	<file alias="Burgerga.jpg">Resource/Burgerga.jpg</file>
@@ -22,9 +22,10 @@
 	<file alias="7up.png">Resource/7up.png</file>
 	<file alias="mirinda.png">Resource/mirinda.png</file>
 	<file alias="tradao.jpg">Resource/tradao.jpg</file>
-    	<file alias="burger.png">Resource/burger.png</file>
-    	<file alias="french-fries.png">Resource/french-fries.png</file>
-    	<file alias="green-salad.png">Resource/green-salad.png</file>
-    	<file alias="noImage.png">Resource/noImage.png</file>
+	<file alias="burger.png">Resource/burger.png</file>
+	<file alias="french-fries.png">Resource/french-fries.png</file>
+	<file alias="green-salad.png">Resource/green-salad.png</file>
+	<file alias="noImage.png">Resource/noImage.png</file>
+	<file alias="closeIcon.png">Resource/closeIcon.png</file>
     </qresource>
 </RCC>

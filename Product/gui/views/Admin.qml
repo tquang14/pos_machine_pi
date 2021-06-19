@@ -30,6 +30,21 @@ Item {
         tableIncome.dataModel = listOfAllReceipt
     }
 
+    function removeQuantity(itemData, index) {
+        // if quantity of clicked item > 0 allow to clear
+        if (itemData[2] > 0) {
+            // if the food hadn't expired but click to clear quantity Popup notification to confirm
+            if (!adminModel.inventory[index].isExpired) {
+                confirmClearNoti.visible = true
+                okBtn.rowOfItemToClearQuantity = index
+            }
+            //else clear quantity of tthe food
+            else
+                if (adminModel.clearQuantityOfItemFromInventory(itemData[1]))
+                    tableWarehouse.requestUpdateDataModel(index, 2, 0)
+        }
+    }
+
     AdminModel {
         id: adminModel
     }
@@ -247,18 +262,11 @@ Item {
                         {text: "Expire date"         ,   width: 0.3},
                     ]
                     onClicked: {
-                        // if quantity of clicked item > 0 allow to clear
-                        if (rowData[2] > 0) {
-                            // if the food hadn't expired but click to clear quantity Popup notification to confirm
-                            if (!adminModel.inventory[row].isExpired) {
-                                confirmClearNoti.visible = true
-                                okBtn.rowOfItemToClearQuantity = row
-                            }
-                            //else clear quantity of tthe food
-                            else
-                                if (adminModel.clearQuantityOfItemFromInventory(rowData[1]))
-                                    requestUpdateDataModel(row, 2, 0)
-                        }
+                        var loader = controlPanel
+//                        controlPanel.active = true
+                        loader.active = true
+                        loader.itemData = rowData
+                        loader.indexOfItem = row
                     }
 
                     dataModel: []
@@ -267,7 +275,74 @@ Item {
                 }
             }
         }
+        //popup when click to item in table warehouse
     }
+
+    Loader {
+        id: controlPanel
+        active: false
+        width: 600
+        height: 300
+        property var itemData: ["", "", "", ""]
+        property int indexOfItem: -1
+        anchors.centerIn: parent
+        sourceComponent:  Item {
+        // headline
+            //title
+            Text {
+                id: controlTitle
+                text: qsTr("Modify item: " + itemData[1])
+                font.pixelSize: Styling._SIZE_F1
+                color: Styling._COLOR_BLACK
+                anchors {
+                    top: parent.top
+                    horizontalCenter: parent.horizontalCenter
+                    topMargin: 5
+                }
+            }
+            //back button
+            Image {
+                id: closeBtn
+                width: 40
+                height: 40
+                source: "qrc:/Images/closeIcon.png"
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    margins: 5
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        controlPanel.active = false
+                    }
+                }
+            }
+        //content
+            //main content
+
+            //apply button
+
+            //delete button
+            MyButton {
+                anchors {
+                    bottom: parent.bottom
+                }
+
+                textContent: "Delete"
+                onBtnClicked: removeQuantity(itemData, indexOfItem)
+            }
+//            removeQuantity(rowData, row)
+            //background
+            Rectangle {
+                z: -1
+                anchors.fill: parent
+                color: Styling._COLOR_WHITE
+                radius: width * 0.01
+            }
+        }
+    }
+
     MyButton {
         id: calendarButton
         anchors.top: headLine.bottom
