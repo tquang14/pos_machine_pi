@@ -70,7 +70,7 @@ ListView {
 
                             anchors.centerIn: parent
                             font.pixelSize: 0.6 * parent.height
-                            font.bold:      new Date(year, month, date).toDateString() == new Date().toDateString() // today
+                            font.bold:      new Date(year, month, date).toDateString() == new Date().toDateString() /*today*/ && day >= 0// only bold the date, not label
                             text: {
                                 if(day < 0)                                               ['S', 'M', 'T', 'W', 'T', 'F', 'S'][index] // Su-Sa
                                 else if(new Date(year, month, date).getMonth() == month)  date // 1-31

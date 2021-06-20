@@ -8,7 +8,7 @@ import "../components"
 Item {
     width: Styling._DISPLAY_WIDTH
     height: Styling._DISPLAY_HEIGHT
-//    property var locale: Qt.locale()
+    property var locale: Qt.locale()
 //    property string dateTimeString: "21-05-2021"
 //    property date currentDate: new Date()
     property var choosenDate: new Date() // set default choose date is current day
@@ -183,6 +183,7 @@ Item {
         width: parent.width
         anchors.top: bar.bottom
         currentIndex: bar.currentIndex
+        enabled: !controlPanel.active
         Item {
             id: incomeTab
             Item {
@@ -265,8 +266,8 @@ Item {
                         var loader = controlPanel
 //                        controlPanel.active = true
                         loader.active = true
-                        loader.itemData = rowData
-                        loader.indexOfItem = row
+//                        loader.itemData = rowData
+                        loader.indexOfItem = row 
                     }
 
                     dataModel: []
@@ -281,64 +282,145 @@ Item {
     Loader {
         id: controlPanel
         active: false
-        width: 600
-        height: 300
-        property var itemData: ["", "", "", ""]
-        property int indexOfItem: -1
+        width: 650
+        height: 350
+        property var itemData: tableWarehouse.dataModel[indexOfItem]
+        property int indexOfItem: 0
         anchors.centerIn: parent
         sourceComponent:  Item {
-        // headline
-            //title
-            Text {
-                id: controlTitle
-                text: qsTr("Modify item: " + itemData[1])
-                font.pixelSize: Styling._SIZE_F1
-                color: Styling._COLOR_BLACK
-                anchors {
-                    top: parent.top
-                    horizontalCenter: parent.horizontalCenter
-                    topMargin: 5
-                }
+            Component.onCompleted: {
+                expiredDatePicker.set(Date.fromLocaleString(locale, itemData[3], "dd-MM-yyyy"))
             }
-            //back button
-            Image {
-                id: closeBtn
-                width: 40
-                height: 40
-                source: "qrc:/Images/closeIcon.png"
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    margins: 5
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        controlPanel.active = false
-                    }
-                }
-            }
-        //content
-            //main content
-
-            //apply button
-
-            //delete button
-            MyButton {
-                anchors {
-                    bottom: parent.bottom
-                }
-
-                textContent: "Delete"
-                onBtnClicked: removeQuantity(itemData, indexOfItem)
-            }
-//            removeQuantity(rowData, row)
             //background
             Rectangle {
-                z: -1
                 anchors.fill: parent
                 color: Styling._COLOR_WHITE
                 radius: width * 0.01
+            }
+            Item {
+                anchors.fill: parent
+                // headline
+                //title
+                Text {
+                    id: controlTitle
+                    text: qsTr("Modify item: " + itemData[1])
+                    font.pixelSize: Styling._SIZE_F1
+                    color: Styling._COLOR_BLACK
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                        topMargin: 5
+                    }
+                }
+                //back button
+                Image {
+                    id: closeBtn
+                    width: 40
+                    height: 40
+                    source: "qrc:/Images/closeIcon.png"
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        margins: 5
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            controlPanel.active = false
+                        }
+                    }
+                }
+                //content
+                //main content
+                Item {
+                    id: quantityContainer
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: childrenRect.width
+                    Text {
+                        id: quantityText
+                        anchors {
+                            left: parent.left
+                            leftMargin: 20
+                            verticalCenter: parent.verticalCenter
+                        }
+                        font{
+                            bold: true
+                            pixelSize: Styling._SIZE_F2
+                        }
+                        text: "Quantity: "
+                    }
+
+                    SpinBox {
+                        id: quantitySpinBox
+                        anchors {
+                            left: quantityText.right
+                            verticalCenter: parent.verticalCenter
+                        }
+
+                        value: parseInt(itemData[2])
+                    }
+                }
+                Item {
+                    id: expiredDateContainer
+                    anchors {
+                        left: quantityContainer.right
+                        verticalCenter: parent.verticalCenter
+                        leftMargin: 20
+                    }
+
+                    Text {
+                        id: expiredDateText
+                        anchors {
+                            left: parent.left
+                            leftMargin: 20
+                            verticalCenter: parent.verticalCenter
+                        }
+                        font {
+                            bold: true
+                            pixelSize: Styling._SIZE_F2
+                        }
+                        text: "Expired date: "
+                    }
+                    property string expiredDateString: itemData[3]
+                    onExpiredDateStringChanged: {
+                        expiredDatePicker.set(Date.fromLocaleString(locale, itemData[3], "dd-MM-yyyy"))
+                    }
+
+                    DatePicker {
+                        id: expiredDatePicker
+                        width: 250
+                        height: 250
+                        anchors {
+                            left: expiredDateText.right
+                            verticalCenter: parent.verticalCenter
+                        }
+                    }
+                }
+                //apply button
+                MyButton {
+                    id: applyBtn
+                    anchors {
+                        bottom: parent.bottom
+                        left: deleteBtn.right
+                        leftMargin: 5
+                    }
+
+                    textContent: "Apply"
+                    onBtnClicked: adminModel.updateItemInInventory(itemData[1], quantitySpinBox.value, Qt.formatDate(expiredDatePicker.selectedDate, 'dd-MM-yyyy'))
+                }
+
+                //delete button
+                MyButton {
+                    id: deleteBtn
+                    anchors {
+                        bottom: parent.bottom
+                    }
+                    active: parseInt(itemData[2]) > 0
+                    textContent: "Delete"
+                    onBtnClicked: {
+                        removeQuantity(itemData, indexOfItem)
+                    }
+                }
             }
         }
     }

@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
     QApplication app(argc, argv);
 
@@ -41,7 +42,6 @@ int main(int argc, char *argv[])
     // create socket server and send to qml
     serverSocket &server = serverSocket::getServerInstance();
     engine.rootContext()->setContextProperty("server", &server);
-
     engine.load(url);
 
     return app.exec();

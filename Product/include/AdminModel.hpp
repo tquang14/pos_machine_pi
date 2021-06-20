@@ -62,6 +62,15 @@ public slots:
     //!
     bool clearQuantityOfItemFromInventory(QString itemName);
 
+    //!
+    //! \brief updateItem - udpate quantity and expired date of item by name
+    //! \param name
+    //! \param quantity
+    //! \param expiredDate
+    //! \return true if update success
+    //!
+    bool updateItemInInventory(QString name, int quantity, QString expiredDate);
+
 private:
     //!
     //! \brief initDB

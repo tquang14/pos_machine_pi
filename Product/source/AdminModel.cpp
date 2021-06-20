@@ -27,6 +27,16 @@ bool AdminModel::clearQuantityOfItemFromInventory(QString itemName)
     return m_query->exec(queryStr);
 }
 
+bool AdminModel::updateItemInInventory(QString name, int quantity, QString expiredDate)
+{
+    if (!m_dbStatus)
+        return false;
+    const QString queryStr = "UPDATE menu SET quantity = '" + QString::number(quantity) + "' "
+                           + ", expDate = '" + expiredDate + "' WHERE name = '" + name + "'";
+//    qDebug() << queryStr;
+    return m_query->exec(queryStr);
+}
+
 void AdminModel::initDB() {
     m_db = new QSqlDatabase();
     *m_db = QSqlDatabase::addDatabase(DB_TYPE);

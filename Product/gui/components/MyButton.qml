@@ -5,11 +5,12 @@ import "../Styling"
 Item {
     id:root
     signal btnClicked(var identify)
+    property bool active: true
     property string textContent: ""
     property string textContentSize: Styling._SIZE_F2
     property string textContentColor: Styling._BACKGOUND_COLOR
     property bool isTextContentBold: false
-    property string btnColor: Styling._COLOR_RED
+    property string btnColor: active ? Styling._COLOR_RED : Styling._COLOR_GRAY
     property bool isRoundedCorners: true
     property int btnWidth: 125
     property int btnHeight: 31
@@ -33,6 +34,7 @@ Item {
         color: root.textContentColor
     }
     MouseArea {
+        enabled: active
         anchors.fill: parent
         onClicked: {
             btnClicked(textContent)

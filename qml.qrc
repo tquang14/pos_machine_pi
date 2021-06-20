@@ -16,6 +16,7 @@
         <file alias="DatePicker.qml">Product/gui/components/DatePicker.qml</file>
         <file alias="Card.qml">Product/gui/components/Card.qml</file>
         <file alias="Table.qml">Product/gui/components/Table.qml</file>
+        <file alias="MyNumpad.qml">Product/gui/components/MyNumpad.qml</file>
         <file alias="qmldir">Product/gui/components/qmldir</file>
     </qresource>
 </RCC>
