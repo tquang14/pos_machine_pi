@@ -86,3 +86,18 @@ QVariantList AdminModel::getInventory() const {
     }
     return list;
 }
+
+QList<QString> AdminModel::getInventoryByName(QString name) {
+    if (!m_dbStatus)
+        return {};
+    // DB will make sure name will be exclusive
+    const QString queryStr = "SELECT quantity, expDate FROM menu WHERE name = '" + name + "'";
+    QList<QString> dataOfItem;
+    m_query->exec(queryStr);
+    while (m_query->next()) {
+        QSqlRecord record = m_query->record();
+        dataOfItem << record.value(0).toString() << record.value(1).toString();
+    }
+    //TODO: update m_inventory array
+    return dataOfItem;
+}

@@ -71,6 +71,13 @@ public slots:
     //!
     bool updateItemInInventory(QString name, int quantity, QString expiredDate);
 
+    //!
+    //! \brief getInventoryByName
+    //! \param name
+    //! \return array store data of item
+    //!
+    QList<QString> getInventoryByName(QString name);
+
 private:
     //!
     //! \brief initDB

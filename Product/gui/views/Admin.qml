@@ -406,7 +406,19 @@ Item {
                     }
 
                     textContent: "Apply"
-                    onBtnClicked: adminModel.updateItemInInventory(itemData[1], quantitySpinBox.value, Qt.formatDate(expiredDatePicker.selectedDate, 'dd-MM-yyyy'))
+                    onBtnClicked: {
+                        let selectedDate = expiredDatePicker.selectedDate
+                        let success = adminModel.updateItemInInventory(itemData[1], quantitySpinBox.value, Qt.formatDate(selectedDate, 'dd-MM-yyyy'))
+                        //update UI if update inventory success
+                        if (success) {
+                            let newData = adminModel.getInventoryByName(itemData[1])
+                            tableWarehouse.dataModel[indexOfItem][2] = newData[0]
+                            tableWarehouse.dataModel[indexOfItem][3] = newData[1]
+                            tableWarehouse.highlightModel[indexOfItem] = parseInt(newData[0]) <= 0 ? Styling._COLOR_GRAY
+                                                                                                   : selectedDate < choosenDate ? Styling._COLOR_ORANGE : "transparent"//recalculate highlight model as data had changed
+                            tableWarehouse.dataModelChanged()
+                        }
+                    }
                 }
 
                 //delete button
